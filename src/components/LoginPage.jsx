@@ -1,17 +1,22 @@
 import { LockClosedIcon } from '@heroicons/react/solid';
+import { useAuth } from 'hooks/useAuth';
 import { useRef } from 'react';
 
 export default function LoginPage() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+  const auth = useAuth();
 
   const submitHandler = (e) => {
     e.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-
-    console.log(email)
+    console.log(email, password);
+    auth.signIn(email, password).then(() => {
+      console.log('Login success');
+    });
   };
+
   return (
     <>
       <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
