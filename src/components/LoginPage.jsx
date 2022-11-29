@@ -1,5 +1,6 @@
 import { LockClosedIcon } from '@heroicons/react/solid';
 import { useAuth } from 'hooks/useAuth';
+import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 
 export default function LoginPage() {
@@ -7,6 +8,8 @@ export default function LoginPage() {
   const passwordRef = useRef(null);
   const auth = useAuth();
   const [errorLogin, setErrorLogin] = useState(null);
+  const router = useRouter();
+
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -16,10 +19,11 @@ export default function LoginPage() {
     auth
       .signIn(email, password)
       .then(() => {
-        setErrorLogin(null)
+        setErrorLogin(null);
+        router.push('/dashboard');
       })
       .catch(() => {
-        setErrorLogin('Login Failed, please check your email and password')
+        setErrorLogin('Login Failed, please check your email and password');
       });
   };
 
@@ -92,7 +96,7 @@ export default function LoginPage() {
                 Sign in
               </button>
             </div>
-            {errorLogin && <span className='w-full bg-red-300 text-red-800 text-center block py-2 rounded-md font-medium text-sm animate-bounce'>{errorLogin}</span>}
+            {errorLogin && <span className="w-full bg-red-300 text-red-800 text-center block py-2 rounded-md font-medium text-sm animate-bounce">{errorLogin}</span>}
           </form>
         </div>
       </div>
