@@ -4,19 +4,24 @@ const VERSION = process.env.NEXT_PUBLIC_API_VERSION;
 const endPoints = {
   auth: {
     login: `${API}/api/${VERSION}/auth/login`,
-    login: `${API}/api/${VERSION}/auth/profile`,
+    profile: `${API}/api/${VERSION}/auth/profile`,
   },
   products: {
     getProduct: (id) => `${API}/api/${VERSION}/products/${id}`,
-    getProducts: `${API}/api/${VERSION}/products`
+    getProducts: (limit, offset) => `${API}/api/${VERSION}/products?limit=${limit}&offset=${offset}`,
+    addProducts: `${API}/api/${VERSION}/products`,
+    updateProduct: (id) => `${API}/api/${VERSION}/products/${id}`,
+    deleteProduct: (id) => `${API}/api/${VERSION}/products/${id}`,
   },
   categories: {
-    getCategory: (id) => `${API}/api/${VERSION}/categories/${id}`,
-    getCategories: `${API}/api/${VERSION}/categories`
+    getCategoryList: `${API}/api/${VERSION}/categories`,
+    addCategory: `${API}/api/${VERSION}/categories`,
+    getCategoryItems: (id) => `${API}/api/${VERSION}/categories/${id}/products`,
+    updateCategory: (id) => `${API}/api/${VERSION}/categories/${id}`, 
   },
-  users: {
-    getUsers: `${API}/api/${VERSION}/users`,
-  }
+  files: {
+    addImage: `${API}/api/${VERSION}/files/upload`, 
+  },
 };
 
 export default endPoints;
