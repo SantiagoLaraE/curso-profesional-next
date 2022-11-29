@@ -17,6 +17,8 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
+    "@headlessui/react": "^1.4.2",
+    "@heroicons/react": "^1.0.5",
     "autoprefixer": "^10.4.13",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
