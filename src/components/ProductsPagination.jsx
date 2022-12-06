@@ -1,33 +1,32 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid';
-import { useFetch } from '@hooks/useFetch';
 import endPoints from '@services/api';
+import axios from 'axios';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
-const ProductsPagination = ({ productLimit, productOffset, currentPage }) => {
+const ProductsPagination = ({ productLimit, productOffset, currentPage, change }) => {
   const router = useRouter();
-  const totalProducts = useFetch(endPoints.products.getProducts(0, 0))?.length;
+  const [totalProducts, setTotalProducts] = useState(0);
   const totalPages = Math.ceil(totalProducts / productLimit);
+  const paginationStart = Math.max(currentPage - 2, 1) > totalPages - 4 ? Math.max(totalPages - 4, 1) : Math.max(currentPage - 2, 1);
+  const paginationEnd = paginationStart + 4 > totalPages ? totalPages : paginationStart + 4;
+
+
+  useEffect(() => {
+    async function getTotalProducts() {
+      const { data } = await axios.get(endPoints.products.getProducts(0, 0));
+      setTotalProducts(data.length);
+    }
+    getTotalProducts();
+
+    if (currentPage > totalPages) {
+      router.push({ query: { page: totalPages } });
+    }
+  }, [currentPage, change]);
 
   let pageIndicator = [];
-  let indicatorStart = 1;
-  let indicatorEnd = 5;
-
-  if (currentPage > 2) {
-    indicatorStart = currentPage - 2;
-    indicatorEnd = currentPage + 2;
-  }
-
-  if (currentPage > totalPages - 2) {
-    indicatorStart = totalPages - 4;
-    indicatorEnd = totalPages;
-  }
-
-  if (currentPage > totalPages || currentPage < 1) {
-    router.push('/404');
-  }
-
-  for (indicatorStart; indicatorStart <= indicatorEnd; indicatorStart++) {
-    pageIndicator.push(indicatorStart);
+  for (let index = paginationStart; index <= paginationEnd; index++) {
+    pageIndicator.push(index);
   }
 
   const handlePage = (page) => {
