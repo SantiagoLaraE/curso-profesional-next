@@ -2,19 +2,36 @@ import ProductsPagination from '@components/ProductsPagination';
 import { useFetch } from '@hooks/useFetch';
 import endPoints from '@services/api';
 import { useRouter } from 'next/router';
+import { Chart } from '@common/Chart';
 
 export default function Dashboard() {
   const router = useRouter();
 
   const currentPage = parseInt(router.query.page) || 1;
 
-  const productLimit = 8;
+  const productLimit = 5;
   let productOffset = (currentPage - 1) * productLimit;
 
   const products = useFetch(endPoints.products.getProducts(productLimit, productOffset));
 
+  const categoryNames = products?.map(({category}) => category.name);
+
+  const countOccurrences = (arr) => arr?.reduce((prev, curr) => ((prev[curr] = ++prev[curr] || 1), prev), {});
+
+  const data = {
+    datasets: [
+      {
+        label: 'Categories',
+        data: countOccurrences(categoryNames),
+        borderWidth: 2,
+        backgroundColor: ['#ffbb11', '#c0c0c0', '#50af95', '#f3ba2f', '#2a71d0'],
+      },
+    ],
+  };
+
   return (
     <>
+      <Chart className="mb-8 mt-2" chartData={data} />
       <div className="flex flex-col">
         <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
