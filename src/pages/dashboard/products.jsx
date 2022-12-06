@@ -1,24 +1,42 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProductsPagination from '@components/ProductsPagination';
 import endPoints from '@services/api';
 import { useRouter } from 'next/router';
-import { useFetch } from '@hooks/useFetch';
 import { PlusCircleIcon } from '@heroicons/react/solid';
 import Modal from '@common/Modal';
 import FormProduct from '@components/FormProducts';
+import axios from 'axios';
+import Alert from '@components/Alert';
+import useAlert from '@hooks/useAlert';
 
-export default function product() {
-  const [open, setOpen] = useState(false);
+export default function Product() {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [products, setProducts] = useState([]);
+  const { alert, setAlert, toggleAlert } = useAlert();
 
   const currentPage = parseInt(router.query.page) || 1;
 
   const productLimit = 5;
   let productOffset = (currentPage - 1) * productLimit;
 
-  const products = useFetch(endPoints.products.getProducts(productLimit, productOffset));
+  useEffect(() => {
+    async function renderProducts() {
+      const response = await axios.get(endPoints.products.getProducts(productLimit, productOffset));
+      setProducts(response.data);
+    }
+    try {
+      renderProducts();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [productOffset, alert]);
+
+
+
   return (
     <>
+      <Alert alert={alert} handleClose={toggleAlert} />
       <div className="lg:flex lg:items-center lg:justify-between mb-8">
         <div className="flex-1 min-w-0">
           <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">List of Products</h2>
@@ -105,7 +123,7 @@ export default function product() {
         </div>
       </div>
       <Modal open={open} setOpen={setOpen}>
-        <FormProduct/>
+        <FormProduct setOpen={setOpen} setAlert={setAlert} />
       </Modal>
     </>
   );
