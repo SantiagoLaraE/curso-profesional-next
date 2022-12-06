@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import ProductsPagination from '@components/ProductsPagination';
 import endPoints from '@services/api';
 import { useRouter } from 'next/router';
-import { PlusCircleIcon } from '@heroicons/react/solid';
+import { PlusCircleIcon, TrashIcon } from '@heroicons/react/solid';
 import Modal from '@common/Modal';
 import FormProduct from '@components/FormProducts';
 import axios from 'axios';
 import Alert from '@components/Alert';
 import useAlert from '@hooks/useAlert';
+import { deleteProduct } from '@services/api/products';
 
 export default function Product() {
   const router = useRouter();
@@ -32,8 +33,16 @@ export default function Product() {
     }
   }, [productOffset, alert]);
 
-
-
+  const handleDelete = (productId) => {
+    deleteProduct(productId).then(() => {
+      setAlert({
+        active: true,
+        message: 'Product deleted successfully',
+        type: 'error',
+        autoClose: false,
+      });
+    });
+  };
   return (
     <>
       <Alert alert={alert} handleClose={toggleAlert} />
@@ -109,15 +118,22 @@ export default function Product() {
                         </a>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="/edit" className="text-red-600 hover:text-red-900">
-                          Delete
-                        </a>
+                        <button
+                          type="button"
+                          href="/edit"
+                          className="flex gap-2 text-red-600 hover:text-red-900"
+                          onClick={() => {
+                            handleDelete(product.id);
+                          }}
+                        >
+                          Delete <TrashIcon className="h-5 w-5" aria-hidden="true" />
+                        </button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <ProductsPagination productLimit={productLimit} productOffset={productOffset} currentPage={currentPage} />
+              <ProductsPagination productLimit={productLimit} productOffset={productOffset} currentPage={currentPage} change={alert}/>
             </div>
           </div>
         </div>
