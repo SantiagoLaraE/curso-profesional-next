@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { useFetch } from '@hooks/useFetch';
 import { PlusCircleIcon } from '@heroicons/react/solid';
 import Modal from '@common/Modal';
+import FormProduct from '@components/FormProducts';
 
 export default function product() {
   const [open, setOpen] = useState(false);
@@ -104,7 +105,7 @@ export default function product() {
         </div>
       </div>
       <Modal open={open} setOpen={setOpen}>
-        <h1>Hola mundooo</h1>
+        <FormProduct/>
       </Modal>
     </>
   );
