@@ -29,7 +29,6 @@ export default function Product() {
     try {
       renderProducts();
     } catch (error) {
-      console.log(error);
     }
   }, [productOffset, alert]);
 

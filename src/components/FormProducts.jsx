@@ -13,9 +13,7 @@ export default function FormProduct({ setOpen, setAlert, product }) {
       setCategories(data);
     }
     getCategories();
-    // if(product) {
-    //   categorySelect.current.value = product.category.id
-    // };
+
   }, [product]);
 
   const handleSubmit = (event) => {
