@@ -1,8 +1,22 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import addProduct from '@services/api/products';
+import axios from 'axios';
+import endPoints from '@services/api';
 
-export default function FormProduct({ setOpen, setAlert }) {
+export default function FormProduct({ setOpen, setAlert, product }) {
   const formRef = useRef(null);
+  const [categories, setCategories] = useState([]);
+  const categorySelect = useRef(null);
+  useEffect(() => {
+    async function getCategories() {
+      const { data } = await axios.get(endPoints.categories.getCategoryList);
+      setCategories(data);
+    }
+    getCategories();
+    // if(product) {
+    //   categorySelect.current.value = product.category.id
+    // };
+  }, [product]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -35,7 +49,6 @@ export default function FormProduct({ setOpen, setAlert }) {
         setOpen(false);
       });
   };
-
   return (
     <form ref={formRef} onSubmit={handleSubmit}>
       <div className="overflow-hidden">
@@ -45,37 +58,50 @@ export default function FormProduct({ setOpen, setAlert }) {
               <label htmlFor="title" className="block text-sm font-medium text-gray-700">
                 Title
               </label>
-              <input type="text" name="title" id="title" className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+              <input
+                defaultValue={product?.title}
+                type="text"
+                name="title"
+                id="title"
+                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+              />
             </div>
             <div className="col-span-6 sm:col-span-3">
               <label htmlFor="price" className="block text-sm font-medium text-gray-700">
                 Price
               </label>
-              <input type="number" name="price" id="price" className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+              <input
+                defaultValue={product?.price}
+                type="number"
+                name="price"
+                id="price"
+                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+              />
             </div>
             <div className="col-span-6">
               <label htmlFor="category" className="block text-sm font-medium text-gray-700">
                 Category
               </label>
               <select
+                ref={categorySelect}
                 id="category"
                 name="category"
-                autoComplete="category-name"
                 className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={product?.category?.id}
               >
-                <option value="1">Clothes</option>
-                <option value="2">Electronics</option>
-                <option value="3">Furniture</option>
-                <option value="4">Toys</option>
-                <option value="5">Others</option>
+                {categories.map((category) => (
+                  <option key={`FPCategory-${category.id}`} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
               </select>
             </div>
-
             <div className="col-span-6">
               <label htmlFor="description" className="block text-sm font-medium text-gray-700">
                 Description
               </label>
               <textarea
+                defaultValue={product?.description}
                 name="description"
                 id="description"
                 autoComplete="description"
