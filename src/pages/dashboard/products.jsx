@@ -10,6 +10,7 @@ import Alert from '@components/Alert';
 import useAlert from '@hooks/useAlert';
 import { deleteProduct } from '@services/api/products';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Product() {
   const router = useRouter();
@@ -29,7 +30,9 @@ export default function Product() {
     }
     try {
       renderProducts();
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }, [productOffset, alert]);
 
   const handleDelete = (productId) => {
@@ -95,7 +98,7 @@ export default function Product() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="flex-shrink-0 h-10 w-10">
-                            <img className="h-10 w-10 rounded-full" src={product.images[0]} alt="" />
+                            <Image className="h-10 w-10 rounded-full" src={product.images[0]} alt={product.title} width="40" height="40" />
                           </div>
                           <div className="ml-4">
                             <div className="text-sm font-medium text-gray-900">{product.title}</div>

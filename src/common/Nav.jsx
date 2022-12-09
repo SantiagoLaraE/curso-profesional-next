@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 
 export default function Nav() {
   const router = useRouter();
-  const route = (router.query.id) ? router.asPath : router.pathname;
+  const route = router.query.id ? router.asPath : router.pathname;
 
   console.log(route);
 

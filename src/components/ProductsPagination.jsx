@@ -11,7 +11,6 @@ const ProductsPagination = ({ productLimit, productOffset, currentPage, change }
   const paginationStart = Math.max(currentPage - 2, 1) > totalPages - 4 ? Math.max(totalPages - 4, 1) : Math.max(currentPage - 2, 1);
   const paginationEnd = paginationStart + 4 > totalPages ? totalPages : paginationStart + 4;
 
-
   useEffect(() => {
     async function getTotalProducts() {
       const { data } = await axios.get(endPoints.products.getProducts(0, 0));
@@ -22,7 +21,7 @@ const ProductsPagination = ({ productLimit, productOffset, currentPage, change }
     if (currentPage > totalPages) {
       router.push({ query: { page: totalPages } });
     }
-  }, [currentPage, change]);
+  }, [currentPage, change, router, totalPages]);
 
   let pageIndicator = [];
   for (let index = paginationStart; index <= paginationEnd; index++) {

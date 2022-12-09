@@ -21,7 +21,7 @@ export default function Edit() {
       }
     }
     getProduct();
-  }, [router?.isReady]);
+  }, [router?.isReady, router]);
 
   return (
     <>

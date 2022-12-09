@@ -17,10 +17,10 @@ const endPoints = {
     getCategoryList: `${API}/api/${VERSION}/categories`,
     addCategory: `${API}/api/${VERSION}/categories`,
     getCategoryItems: (id) => `${API}/api/${VERSION}/categories/${id}/products`,
-    updateCategory: (id) => `${API}/api/${VERSION}/categories/${id}`, 
+    updateCategory: (id) => `${API}/api/${VERSION}/categories/${id}`,
   },
   files: {
-    addImage: `${API}/api/${VERSION}/files/upload`, 
+    addImage: `${API}/api/${VERSION}/files/upload`,
   },
 };
 

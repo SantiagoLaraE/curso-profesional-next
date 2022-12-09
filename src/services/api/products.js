@@ -13,8 +13,6 @@ const addProduct = async (body) => {
   return response.data;
 };
 
-
-
 const deleteProduct = async (id) => {
   const response = await axios.delete(endPoints.products.deleteProduct(id));
   return response.data;
@@ -31,7 +29,5 @@ const updateProduct = async (id, body) => {
   const response = await axios.put(endPoints.products.updateProduct(id), body, config);
   return response.data;
 };
-
-
 
 export { addProduct, deleteProduct, updateProduct };
