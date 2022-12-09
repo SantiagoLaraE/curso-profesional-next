@@ -19,10 +19,6 @@ function useProvideAuth() {
   const [user, setUser] = useState(null);
   const router = useRouter();
 
-  if (router.isReady && router.pathname != '/login' && !user) {
-    router.push('/login');
-  }
-
   const signIn = async (email, password) => {
     const options = {
       headers: {
