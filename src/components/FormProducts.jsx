@@ -1,19 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
-import addProduct from '@services/api/products';
+import { addProduct, updateProduct } from '@services/api/products';
 import axios from 'axios';
 import endPoints from '@services/api';
+import { useRouter } from 'next/router';
 
 export default function FormProduct({ setOpen, setAlert, product }) {
   const formRef = useRef(null);
   const [categories, setCategories] = useState([]);
   const categorySelect = useRef(null);
+  const router = useRouter()
   useEffect(() => {
     async function getCategories() {
       const { data } = await axios.get(endPoints.categories.getCategoryList);
       setCategories(data);
     }
     getCategories();
-
   }, [product]);
 
   const handleSubmit = (event) => {
@@ -26,26 +27,40 @@ export default function FormProduct({ setOpen, setAlert, product }) {
       categoryId: parseInt(formData.get('category')),
       images: [formData.get('images').name],
     };
-
-    addProduct(data)
-      .then(() => {
-        setAlert({
-          active: true,
-          message: 'Product added successfully',
-          type: 'success',
-          autoClose: true,
+    if (product) {
+      updateProduct(product.id, data)
+        .then(() => {
+          router.push('/dashboard/products');
+        })
+        .catch((error) => {
+          setAlert({
+            active: true,
+            message: error.message,
+            type: 'error',
+            autoClose: true,
+          });
         });
-        setOpen(false);
-      })
-      .catch((error) => {
-        setAlert({
-          active: true,
-          message: error.message,
-          type: 'error',
-          autoClose: true,
+    } else {
+      addProduct(data)
+        .then(() => {
+          setAlert({
+            active: true,
+            message: 'Product added successfully',
+            type: 'success',
+            autoClose: true,
+          });
+          setOpen(false);
+        })
+        .catch((error) => {
+          setAlert({
+            active: true,
+            message: error.message,
+            type: 'error',
+            autoClose: true,
+          });
+          setOpen(false);
         });
-        setOpen(false);
-      });
+    }
   };
   return (
     <form ref={formRef} onSubmit={handleSubmit}>
@@ -85,7 +100,7 @@ export default function FormProduct({ setOpen, setAlert, product }) {
                 id="category"
                 name="category"
                 className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                value={product?.category?.id}
+                defaultValue={product?.category?.id}
               >
                 {categories.map((category) => (
                   <option key={`FPCategory-${category.id}`} value={category.id}>

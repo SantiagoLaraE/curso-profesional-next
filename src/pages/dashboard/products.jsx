@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import ProductsPagination from '@components/ProductsPagination';
 import endPoints from '@services/api';
 import { useRouter } from 'next/router';
-import { PlusCircleIcon, TrashIcon } from '@heroicons/react/solid';
+import { PlusCircleIcon, TrashIcon, PencilIcon } from '@heroicons/react/solid';
 import Modal from '@common/Modal';
 import FormProduct from '@components/FormProducts';
 import axios from 'axios';
 import Alert from '@components/Alert';
 import useAlert from '@hooks/useAlert';
 import { deleteProduct } from '@services/api/products';
+import Link from 'next/link';
 
 export default function Product() {
   const router = useRouter();
@@ -28,8 +29,7 @@ export default function Product() {
     }
     try {
       renderProducts();
-    } catch (error) {
-    }
+    } catch (error) {}
   }, [productOffset, alert]);
 
   const handleDelete = (productId) => {
@@ -112,15 +112,15 @@ export default function Product() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.id}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="/edit" className="text-indigo-600 hover:text-indigo-900">
-                          Edit
-                        </a>
+                        <Link href={`edit/${product.id}`} className="text-indigo-600 hover:text-indigo-900 flex gap-2 justify-center">
+                          Edit <PencilIcon className="h-5 w-5" aria-hidden="true" />
+                        </Link>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                         <button
                           type="button"
                           href="/edit"
-                          className="flex gap-2 text-red-600 hover:text-red-900"
+                          className="flex gap-2 text-red-600 hover:text-red-900 justify-center"
                           onClick={() => {
                             handleDelete(product.id);
                           }}
@@ -132,7 +132,7 @@ export default function Product() {
                   ))}
                 </tbody>
               </table>
-              <ProductsPagination productLimit={productLimit} productOffset={productOffset} currentPage={currentPage} change={alert}/>
+              <ProductsPagination productLimit={productLimit} productOffset={productOffset} currentPage={currentPage} change={alert} />
             </div>
           </div>
         </div>
